@@ -26,10 +26,17 @@ void print(vector<int>& in) {
 }
 
 int main() {
-    vector<int> test = {1, 0, 0, 3};
+
+    vector<int> test = {2, 0, 0, 1};
     print(test);
     plusOne(test);
     print(test);
+
+    test = {9, 9, 9, 9, 9};
+    print(test);
+    plusOne(test);
+    print(test);
+
     return 0;
 }
 
