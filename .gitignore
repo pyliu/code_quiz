@@ -2,4 +2,5 @@
 *.o
 *.swp
 *.dSYM
+.DS_Store
 
