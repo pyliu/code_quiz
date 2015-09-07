@@ -17,6 +17,12 @@ void print(T const & in) {
     cout << endl;
 }
 
+void swap(double& a, double& b) {
+    double tmp = a;
+    a = b;
+    b = tmp;
+}
+
 class HeapSort {
 private:
     void swap(vector<int>& in, int index1, int index2) {
@@ -90,7 +96,66 @@ public:
 class HeapSort2 {
 private:
     std::vector<double> v;
+    
+    int findParent(int index) {
+        return floor((index - 1) / 2);
+    }
 
+    int findLeft(int index) {
+        return (2 * index + 1);
+    }
+
+    int findRight(int index) {
+        return (2 * index + 2);
+    }
+
+    void build(bool max = true) {
+        int length = v.size();
+        for (int i = (length - 2) / 2; i >= 0; i--) {
+            this->heapify(i, max);
+        }
+    }
+    
+    void heapify(int index, bool max = true) {
+        this->heapify(index, v.size(), max);
+    }
+
+    void heapify(int index, int size, bool max = true) {
+        int left = this->findLeft(index);
+        int right = this->findRight(index);
+        int pivot = index;
+        int length = size;
+
+        if (left < length) {
+            if (max && v[left] > v[pivot]) {
+                pivot = left;
+            } else if (!max && v[left] < v[pivot]) {
+                pivot = left;
+            }
+        }
+
+        if (right < length) {
+            if (max && v[right] > v[pivot]) {
+                pivot = right;
+            } else if (!max && v[left] < v[pivot]) {
+                pivot = right;
+            }
+        }
+
+        if (pivot != index) {
+            swap(v[index], v[pivot]);
+            heapify(pivot, length, max);
+        }
+    }
+
+    void sort(bool max = true) {
+        this->build(max);
+        for (int i = v.size() - 1; i >= 0; i--) {
+            swap(v[0], v[i]);
+            heapify(0, i, max);
+        }
+
+    }
 public:
     HeapSort2() {
         v = {33.0, 44.0, 55.0, 66.0, 77.0, 88.0, 99.0, 11.0, 22.0};
@@ -98,11 +163,20 @@ public:
 
     void test() {
         print(v);
+        this->build();
+        print(v);
+        this->build(false);
+        print(v);
+        this->sort();
+        print(v);
+        // min heap is wrong???
+        this->sort(false);
+        print(v);
     }
 };
 
 int main() {
-    
+
     HeapSort2 test2;
     test2.test();
 
