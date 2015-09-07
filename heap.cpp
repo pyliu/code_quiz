@@ -109,50 +109,65 @@ private:
         return (2 * index + 2);
     }
 
-    void build(bool max = true) {
+    void build() {
         int length = v.size();
         for (int i = (length - 2) / 2; i >= 0; i--) {
-            this->heapify(i, max);
+            // recusive
+            this->heapify(i, length);
+            // loop
+            //this->shift(i, length);
         }
     }
     
-    void heapify(int index, bool max = true) {
-        this->heapify(index, v.size(), max);
+    void shift(int index, int len) {
+        int i = index;
+        int child = this->findLeft(i);
+        while (child < len) {
+            // find out which child is bigger and take its index
+            if (child + 1 < len && v[child] < v[child + 1]) {
+                child++;
+            }
+            // if root is bigger then does nothing
+            if (v[i] >= v[child]) {
+                break;
+            } else {
+                // swap with root
+                swap(v[i], v[child]);
+                // check from the child index
+                i = child;
+                child = this->findLeft(i);
+            }
+        }
     }
 
-    void heapify(int index, int size, bool max = true) {
+    void heapify(int index, int size) {
         int left = this->findLeft(index);
         int right = this->findRight(index);
         int pivot = index;
-        int length = size;
 
-        if (left < length) {
-            if (max && v[left] > v[pivot]) {
-                pivot = left;
-            } else if (!max && v[left] < v[pivot]) {
+        if (left < size) {
+            if (v[left] > v[pivot]) {
                 pivot = left;
             }
         }
 
-        if (right < length) {
-            if (max && v[right] > v[pivot]) {
-                pivot = right;
-            } else if (!max && v[left] < v[pivot]) {
+        if (right < size) {
+            if (v[right] > v[pivot]) {
                 pivot = right;
             }
         }
 
         if (pivot != index) {
             swap(v[index], v[pivot]);
-            heapify(pivot, length, max);
+            heapify(pivot, size);
         }
     }
 
-    void sort(bool max = true) {
-        this->build(max);
+    void sort() {
+        this->build();
         for (int i = v.size() - 1; i >= 0; i--) {
             swap(v[0], v[i]);
-            heapify(0, i, max);
+            heapify(0, i);
         }
 
     }
@@ -165,12 +180,7 @@ public:
         print(v);
         this->build();
         print(v);
-        this->build(false);
-        print(v);
         this->sort();
-        print(v);
-        // min heap is wrong???
-        this->sort(false);
         print(v);
     }
 };
