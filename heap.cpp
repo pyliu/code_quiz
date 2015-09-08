@@ -43,12 +43,35 @@ private:
         int length = v.size();
         for (int i = (length - 2) / 2; i >= 0; i--) {
             // recusive
-            this->heapify(i, length);
+            //this->heapify(i, length);
+            this->heapifyMin(i, length);
             // loop
             //this->shift(i, length);
+            //this->shiftMin(i, length);
         }
     }
     
+    void shiftMin(int index, int len) {
+        int i = index;
+        int child = this->findLeft(i);
+        while (child < len) {
+            // find out which child is bigger and take its index
+            if (child + 1 < len && v[child] > v[child + 1]) {
+                child++;
+            }
+            // if root is bigger then does nothing
+            if (v[i] <= v[child]) {
+                break;
+            } else {
+                // swap with root
+                swap(v[i], v[child]);
+                // check from the child index
+                i = child;
+                child = this->findLeft(i);
+            }
+        }
+    }
+
     void shift(int index, int len) {
         int i = index;
         int child = this->findLeft(i);
@@ -93,11 +116,36 @@ private:
         }
     }
 
+    void heapifyMin(int index, int size) {
+        int left = this->findLeft(index);
+        int right = this->findRight(index);
+        int pivot = index;
+
+        if (left < size) {
+            if (v[left] < v[pivot]) {
+                pivot = left;
+            }
+        }
+
+        if (right < size) {
+            if (v[right] < v[pivot]) {
+                pivot = right;
+            }
+        }
+
+        if (pivot != index) {
+            swap(v[index], v[pivot]);
+            heapifyMin(pivot, size);
+        }
+    }
+
     void sort() {
         this->build();
         for (int i = v.size() - 1; i >= 0; i--) {
             swap(v[0], v[i]);
-            heapify(0, i);
+            //heapify(0, i);
+            //this->shiftMin(0, i);
+            this->heapifyMin(0, i);
         }
 
     }
